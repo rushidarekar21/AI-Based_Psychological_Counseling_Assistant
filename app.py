@@ -10,24 +10,15 @@ from langchain_groq import ChatGroq
 # Load variables from the .env file
 load_dotenv()
 api_key = os.getenv('API_KEY')
-
-# Load the data
 data = pd.read_csv("Mental_Health_FAQ.csv")
+# Load FAISS index and metadata
+st.write("Loading vector database...")
+index = faiss.read_index("faiss_index_file.index")
+st.write("FAISS index loaded successfully!")
 
-# Initialize the embedding model
+
+# Initialize embedding model
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-
-# Generate embeddings for questions
-st.write("Generating embeddings...")
-embeddings = embedding_model.encode(data['Questions'].tolist())
-embeddings = np.array(embeddings, dtype='float32')
-
-# Initialize FAISS index
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-
-# Add embeddings to the index
-index.add(embeddings)
 
 # Initialize the LLM
 llm = ChatGroq(
@@ -74,7 +65,7 @@ if query:
 
     # Display the response
     st.subheader("Response:")
-    st.write(response)
+    st.write(response.content)
 
     # Optionally display the similar questions and answers
     st.subheader("Similar Questions and Answers:")
