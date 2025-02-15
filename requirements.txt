@@ -1,2 +1,7 @@
-ipykernal
+ipykernel
 pandas
+faiss-cpu
+sentence-transformers
+langchain-groq
+python-dotenv
+streamlit
